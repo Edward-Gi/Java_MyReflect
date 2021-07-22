@@ -25,7 +25,7 @@ public class PhoneImpl {
         // 获取配置信息
         String msClassName = prop.getProperty("phoneMS");
         String osClassName = prop.getProperty("phoneOS");
-        String phoneName = prop.getProperty("phoneName");
+        String phoneName = prop.getProperty("Name");
 
         // 获取ms、os以及phone 类的实例
         Class<MobieService> mobieServiceClass =(Class<MobieService>) Class.forName(msClassName);  // 使用强制类型转换转为Class<MobileService>
@@ -35,16 +35,16 @@ public class PhoneImpl {
         // 获取phone 的属性 ms、os、phoneName
         Field msField = phoneClass.getDeclaredField("ms");
         Field osField = phoneClass.getDeclaredField("os");
-        Field phoneNameField = phoneClass.getDeclaredField("phoneName");
         msField.setAccessible(true);   // 让私有属性可以被读写
         osField.setAccessible(true);   // 让私有属性可以被读写
-        phoneNameField.setAccessible(true); //上私有属性可以被读写
+
 
         // 获取方法
         Method printMethod = phoneClass.getDeclaredMethod("showMS_OS");
 
         // 对象实例化
-        //Constructor<Phone> phoneConstructor = phoneClass.getConstructor();
+//        Constructor phoneConstructor = phoneClass.getConstructor();
+//        Phone phone = (Phone) phoneConstructor.newInstance(phoneName);
         Phone phone = phoneClass.newInstance();
         Constructor<MobieService> mobieServiceConstructor = mobieServiceClass.getConstructor();
         MobieService mobieService =mobieServiceConstructor.newInstance();
@@ -54,7 +54,7 @@ public class PhoneImpl {
         // 组装
         msField.set(phone,mobieService);
         osField.set(phone,operateSystem);
-        phoneNameField.set(phone,phoneName);
+        phone.setPhoneName(phoneName);
 
         // 应答
         printMethod.invoke(phone);
